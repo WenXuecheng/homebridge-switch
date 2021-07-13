@@ -1,42 +1,49 @@
 module.exports = (api) => {
     api.registerAccessory('table_lamp', AccessoryPluginTableLamp);
 }
-const http=require('http')
-function fuc(res,log) {
-    const { statusCode } = res;
-    const contentType = res.headers['content-type'];
 
-    let error;
-    // 任何 2xx 状态码都表示成功响应，但这里只检查 200。
-    if (statusCode !== 200) {
-        error = new Error('Request Failed.\n' +
-            `Status Code: ${statusCode}`);
-        // } else if (!/^application\/json/.test(contentType)) {
-        //     error = new Error('Invalid content-type.\n' +
-        //         `Expected application/json but received ${contentType}`);
-    }
-    if (error) {
-        log.error(error.message);
-        // 消费响应数据以释放内存
-        res.resume();
-        return;
-    }
-    res.setEncoding('utf8');
-    let rawData = '';
-    res.on('data', (chunk) => { rawData += chunk;
-    });
-    res.on('end', () => {
-        try {
-            //console.log(rawData);
-            const parsedData = JSON.parse(rawData);
-            log.log(parsedData);
-            return parsedData;
-        } catch (e) {
-            log.error(e.message);
+function switch_on_raspberry(switch_name, switch_option, log) {
+    const http=require('http');
+    log.info('log here');
+    var rawData = '';
+    http.get('http://192.168.1.101:8001/homebridge/switch/'+switch_name+'/'+switch_option, (res) => {
+        const { statusCode } = res;
+        const contentType = res.headers['content-type'];
+
+        let error;
+        // 任何 2xx 状态码都表示成功响应，但这里只检查 200。
+        if (statusCode !== 200) {
+            error = new Error('Request Failed.\n' +
+                `Status Code: ${statusCode}`);
+            // } else if (!/^application\/json/.test(contentType)) {
+            //     error = new Error('Invalid content-type.\n' +
+            //         `Expected application/json but received ${contentType}`);
         }
+        if (error) {
+            log.error(error.message);
+            // 消费响应数据以释放内存
+            res.resume();
+            return;
+        }
+        res.setEncoding('utf8');
+        res.on('data', (chunk) => { rawData += chunk;
+        });
+        res.on('end', () => {
+            try {
+                log.info(rawData);
+                // const parsedData = JSON.parse(rawData);
+                // log.info(parsedData);
+            } catch (e) {
+                log.error(e.message);
+            }
+        });
+    }).on('error', (e) => {
+        log.error(`Got error: ${e.message}`);
     });
+    return rawData;
 
 }
+
 class AccessoryPluginTableLamp {
 
     /**
@@ -84,10 +91,11 @@ class AccessoryPluginTableLamp {
     }
 
     async setOnHandler(value) {
-        http.get('http://localhost:8001/homebrigde/switch/'+ this.config.name+'/'+value.toString(),function  (res){
-            fuc(res,this.log);
-        }).on('error', (e) => {
-            this.log.error(`Got error: ${e.message}`);
-        });
+        let op
+        if (value)
+             op = 'on';
+        else
+            op = 'close'
+        switch_on_raspberry(this.config.name, op, this.log);
     }
 }
