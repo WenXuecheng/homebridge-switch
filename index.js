@@ -84,7 +84,7 @@ class AccessoryPluginTableLamp {
     }
 
     async setOnHandler(value) {
-        http.get('http://192.168.1.155:8001/homebrigde/switch/'+ this.config.name+'/'+value.toString(),function  (res){
+        http.get('http://localhost:8001/homebrigde/switch/'+ this.config.name+'/'+value.toString(),function  (res){
             fuc(res,this.log);
         }).on('error', (e) => {
             this.log.error(`Got error: ${e.message}`);
