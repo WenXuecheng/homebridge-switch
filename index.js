@@ -87,9 +87,9 @@ class AccessoryPluginSwitch {
         //this.log.info('Getting switch state');
 
         // get the current value of the switch in your own code
-        let status = await switch_on_raspberry(this.config.name, 'aaaa', this.log);
-        status = status.status;
-        const value = status;
+        let s = await switch_on_raspberry(this.config.name, 'get', this.log);
+        s = s.status_switch;
+        const value = true;
         return value;
     }
 
@@ -98,7 +98,7 @@ class AccessoryPluginSwitch {
         if (value)
              op = 'open';
         else
-            op = 'close'
+            op = 'close';
         this.log(await switch_on_raspberry(this.config.name, op, this.log));
     }
 }
