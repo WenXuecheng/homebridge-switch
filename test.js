@@ -28,7 +28,7 @@ async function switch_on_raspberry(switch_name, switch_option, log) {
                 res.on('end', () => {
                     try {
                         const parsedData = JSON.parse(rawData);
-                        log.info(parsedData);
+                        //log.info(parsedData);
                         resolve(parsedData);
                     } catch (e) {
                         log.error(e.message);
@@ -39,7 +39,11 @@ async function switch_on_raspberry(switch_name, switch_option, log) {
             });
         });
     }
-    return await f(switch_name, switch_option, log);
+    console.log('asdf');
+    let a=await f(switch_name, switch_option, log);
+    console.log(a);
 }
 
 
+let a = switch_on_raspberry('顶灯', 'open', console)
+//console.log(a.name)
