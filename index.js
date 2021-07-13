@@ -15,9 +15,9 @@ function switch_on_raspberry(switch_name, switch_option, log) {
         if (statusCode !== 200) {
             error = new Error('Request Failed.\n' +
                 `Status Code: ${statusCode}`);
-            // } else if (!/^application\/json/.test(contentType)) {
-            //     error = new Error('Invalid content-type.\n' +
-            //         `Expected application/json but received ${contentType}`);
+            } else if (!/^application\/json/.test(contentType)) {
+                error = new Error('Invalid content-type.\n' +
+                    `Expected application/json but received ${contentType}`);
         }
         if (error) {
             log.error(error.message);
@@ -30,9 +30,8 @@ function switch_on_raspberry(switch_name, switch_option, log) {
         });
         res.on('end', () => {
             try {
-                log.info(rawData);
-                // const parsedData = JSON.parse(rawData);
-                // log.info(parsedData);
+                const parsedData = JSON.parse(rawData);
+                log.info(parsedData);
             } catch (e) {
                 log.error(e.message);
             }
@@ -96,6 +95,7 @@ class AccessoryPluginSwitch {
              op = 'on';
         else
             op = 'close'
-        switch_on_raspberry(this.config.name, op, this.log);
+        let r=switch_on_raspberry(this.config.name, op, this.log);
+        this.log.info(r.name);
     }
 }
