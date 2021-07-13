@@ -1,5 +1,5 @@
 {
-  "name": "homebridge-table-lamp",
+  "name": "homebridge-switch",
   "version": "1.0.0",
   "description": "this is a switch plugin",
   "main": "index.js",

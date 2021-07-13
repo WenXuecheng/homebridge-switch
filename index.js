@@ -1,5 +1,5 @@
 module.exports = (api) => {
-    api.registerAccessory('table_lamp', AccessoryPluginTableLamp);
+    api.registerAccessory('switch', AccessoryPluginSwitch);
 }
 
 function switch_on_raspberry(switch_name, switch_option, log) {
@@ -44,7 +44,7 @@ function switch_on_raspberry(switch_name, switch_option, log) {
 
 }
 
-class AccessoryPluginTableLamp {
+class AccessoryPluginSwitch {
 
     /**
      * REQUIRED - This is the entry point to your plugin
@@ -54,7 +54,7 @@ class AccessoryPluginTableLamp {
         this.config = config;
         this.api = api;
 
-        this.log.debug('Table Lamp Accessory Plugin Loaded');
+        this.log.debug('Switch Accessory Plugin Loaded');
 
         // your accessory must have an AccessoryInformation service
         this.informationService = new this.api.hap.Service.AccessoryInformation()
