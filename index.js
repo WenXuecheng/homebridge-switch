@@ -2,7 +2,7 @@ module.exports = (api) => {
     api.registerAccessory('table_lamp', AccessoryPluginTableLamp);
 }
 const http=require('http')
-function fuc(res) {
+function fuc(res,log) {
     const { statusCode } = res;
     const contentType = res.headers['content-type'];
 
@@ -16,7 +16,7 @@ function fuc(res) {
         //         `Expected application/json but received ${contentType}`);
     }
     if (error) {
-        console.error(error.message);
+        log.error(error.message);
         // 消费响应数据以释放内存
         res.resume();
         return;
@@ -29,9 +29,10 @@ function fuc(res) {
         try {
             //console.log(rawData);
             const parsedData = JSON.parse(rawData);
-            console.log(parsedData);
+            log.log(parsedData);
+            return parsedData;
         } catch (e) {
-            console.error(e.message);
+            log.error(e.message);
         }
     });
 
@@ -47,7 +48,6 @@ class AccessoryPluginTableLamp {
         this.api = api;
 
         this.log.debug('Table Lamp Accessory Plugin Loaded');
-        this.log.debug(this.name);
 
         // your accessory must have an AccessoryInformation service
         this.informationService = new this.api.hap.Service.AccessoryInformation()
@@ -84,8 +84,8 @@ class AccessoryPluginTableLamp {
     }
 
     async setOnHandler(value) {
-        http.get('http://192.168.1.155:8001/test',function  (res){
-            fuc(res);
+        http.get('http://192.168.1.155:8001/homebrigde/switch/'+ this.config.name+'/'+value.toString(),function  (res){
+            fuc(res,this.log);
         }).on('error', (e) => {
             this.log.error(`Got error: ${e.message}`);
         });
