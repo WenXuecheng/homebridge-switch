@@ -106,6 +106,7 @@ class AccessoryPluginSwitch {
             op = 'open';
         else
             op = 'close';
-        this.log.info(switch_on_raspberry(this.config.name, op, this.log));
+        let re = await switch_on_raspberry(this.config.name, op, this.log);
+        this.log.info(re);
     }
 }
