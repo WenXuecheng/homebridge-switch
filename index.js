@@ -58,17 +58,22 @@ class AccessoryPluginSwitch {
 
         this.log.debug('Switch Accessory Plugin Loaded');
 
+        this.Service = this.api.hap.Service;
+        this.Characteristic = this.api.hap.Characteristic;
+
         // your accessory must have an AccessoryInformation service
         this.informationService = new this.api.hap.Service.AccessoryInformation()
             .setCharacteristic(this.api.hap.Characteristic.Manufacturer, "Connor Manufacturer")
             .setCharacteristic(this.api.hap.Characteristic.Model, "Connor Model");
 
+        // extract name from config
+        this.name = config.name;
+
         // create a new "Switch" service
-        this.switchService = new this.api.hap.Service.Switch(this.name);
-        this.log.info(this.name);
+        this.switchService = new this.Service(this.Service.Switch);
 
         // link methods used when getting or setting the state of the service
-        this.switchService.getCharacteristic(this.api.hap.Characteristic.On)
+        this.switchService.getCharacteristic(this.Characteristic.On)
             .onGet(this.getOnHandler.bind(this))   // bind to getOnHandler method below
             .onSet(this.setOnHandler.bind(this));  // bind to setOnHandler method below
     }
@@ -98,7 +103,7 @@ class AccessoryPluginSwitch {
     async setOnHandler(value) {
         let op
         if (value)
-             op = 'open';
+            op = 'open';
         else
             op = 'close';
         this.log.info(switch_on_raspberry(this.config.name, op, this.log));
