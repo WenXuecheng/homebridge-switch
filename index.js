@@ -91,6 +91,7 @@ class AccessoryPluginSwitch {
         let s = await switch_on_raspberry(this.config.name, 'get', this.log);
         s = s.status_switch;
         const value = true;
+        this.log.info("value:"+value);
         return value;
     }
 
@@ -100,6 +101,6 @@ class AccessoryPluginSwitch {
              op = 'open';
         else
             op = 'close';
-        switch_on_raspberry(this.config.name, op, this.log);
+        this.log.info(switch_on_raspberry(this.config.name, op, this.log));
     }
 }
