@@ -70,7 +70,7 @@ class AccessoryPluginSwitch {
         this.name = config.name;
 
         // create a new "Switch" service
-        this.switchService = new this.Service(this.Service.Switch);
+        this.switchService = new this.Service(this.Service.Switch(this.name));
 
         // link methods used when getting or setting the state of the service
         this.switchService.getCharacteristic(this.Characteristic.On)
