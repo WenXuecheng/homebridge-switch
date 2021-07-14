@@ -5,7 +5,7 @@ module.exports = (api) => {
 function switch_on_raspberry(switch_name, switch_option, log) {
     return new Promise(resolve => {
         const http = require('http');
-        http.get('http://192.168.1.101:8001/homebridge/switch/' + switch_name + '/' + switch_option, (res) => {
+        http.get('http://localhost:8001/homebridge/switch/' + switch_name + '/' + switch_option, (res) => {
             const {statusCode} = res;
             const contentType = res.headers['content-type'];
             let rawData = '';
@@ -60,11 +60,12 @@ class AccessoryPluginSwitch {
 
         // your accessory must have an AccessoryInformation service
         this.informationService = new this.api.hap.Service.AccessoryInformation()
-            .setCharacteristic(this.api.hap.Characteristic.Manufacturer, "Custom Manufacturer")
-            .setCharacteristic(this.api.hap.Characteristic.Model, "Custom Model");
+            .setCharacteristic(this.api.hap.Characteristic.Manufacturer, "Connor Manufacturer")
+            .setCharacteristic(this.api.hap.Characteristic.Model, "Connor Model");
 
         // create a new "Switch" service
         this.switchService = new this.api.hap.Service.Switch(this.name);
+        this.log.info(this.name);
 
         // link methods used when getting or setting the state of the service
         this.switchService.getCharacteristic(this.api.hap.Characteristic.On)
